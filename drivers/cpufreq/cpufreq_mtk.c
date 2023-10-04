@@ -2,6 +2,7 @@
  * drivers/cpufreq/cpufreq_mtk.c
  *
  * Copyright (C) 2022 bengris32
+ * Copyright (C) 2023 aarch64
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -28,6 +29,9 @@
 #define cpufreq_mtk_attr(_name)						\
 static struct kobj_attribute _name##_attr =			\
 __ATTR(_name, 0644, show_##_name, store_##_name)
+
+/* enable by default */
+static int set_freq = 1;
 
 /* cpu frequency table from cpufreq dt parse */
 static struct cpufreq_frequency_table* cpuftbl[2];
@@ -100,6 +104,9 @@ int set_max_cpu_freq(int cluster, int max)
 {
     int ret = -EINVAL;
 
+    if (set_freq == 0)
+        goto out;
+    
     if (unlikely(!is_freq_valid(cluster, max)))
         goto out;
 
@@ -119,6 +126,9 @@ int set_min_cpu_freq(int cluster, int min)
 {
     int ret = -EINVAL;
 
+    if (set_freq == 0)
+        goto out;
+        
     if (unlikely(!is_freq_valid(cluster, min)))
         goto out;
 
@@ -132,6 +142,26 @@ int set_min_cpu_freq(int cluster, int min)
 out:
     return ret;
 }
+
+static ssize_t show_state(struct kobject *kobj,
+					struct kobj_attribute *attr, char *buf)
+{
+    return sprintf(buf, "%d\n", set_freq);
+}
+
+static ssize_t store_state(struct kobject *kobj,
+                    struct kobj_attribute *attr, const char *buf,
+                    size_t count)
+{
+    int val;
+    if (sscanf(buf, "%d", &val) == 1) {
+        set_freq = val;
+        return count;
+    }
+    return -EINVAL;
+}
+
+cpufreq_mtk_attr(state);
 
 static ssize_t show_lcluster_min_freq(struct kobject *kobj,
 					struct kobj_attribute *attr, char *buf)
@@ -252,6 +282,7 @@ static struct attribute *mtk_param_attributes[] = {
     &lcluster_max_freq_attr.attr,
     &bcluster_min_freq_attr.attr,
     &bcluster_max_freq_attr.attr,
+    &state_attr.attr,
     NULL,
 };
 
