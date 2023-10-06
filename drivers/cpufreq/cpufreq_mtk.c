@@ -203,6 +203,10 @@ static ssize_t store_lcluster_max_freq(struct kobject *kobj,
 {
     int ret, new_freq;
 
+    /* reduces the frequency by 10%*/
+    if (new_freq > 1820000)
+    	new_freq *= 0.90;
+    	
     ret = sscanf(buf, "%d", &new_freq);
     if (ret != 1)
         return -EINVAL;
@@ -260,6 +264,10 @@ static ssize_t store_bcluster_max_freq(struct kobject *kobj,
                     size_t count)
 {
     int ret, new_freq;
+    
+    /* reduces the frequency by 10%*/
+    if (new_freq > 1770000)
+    	new_freq *= 0.90;
 
     ret = sscanf(buf, "%d", &new_freq);
     if (ret != 1)
