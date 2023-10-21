@@ -1206,39 +1206,55 @@ config DMI
 	  continue to boot on existing non-UEFI platforms.
 
 config BUILD_ARM64_APPENDED_DTB_IMAGE
-	bool "Build a concatenated Image.gz/dtb by default"
-	depends on OF
-	help
-	  Enabling this option will cause a concatenated Image.gz and list of
-	  DTBs to be built by default (instead of a standalone Image.gz.)
-	  The image will built in arch/arm64/boot/Image.gz-dtb
+        bool "Build a concatenated Image.gz/dtb by default"
+        depends on OF
+        help
+          Enabling this option will cause a concatenated Image.gz and list of
+          DTBs to be built by default (instead of a standalone Image.gz.)
+          The image will built in arch/arm64/boot/Image.gz-dtb
+
+config BUILD_ARM64_DTB_OVERLAY_IMAGE
+        bool "Build a device tree overlay image"
+        depends on OF
+        help
+          Enabling this option will casue overlay device tree
+          to be built by default.
+          Overlay DT contains device-specific configurations.
+          Please be aware that bootloader supports DT merging.
 
 choice
-	prompt "Appended DTB Kernel Image name"
-	depends on BUILD_ARM64_APPENDED_DTB_IMAGE
-	help
-	  Enabling this option will cause a specific kernel image Image or
-	  Image.gz to be used for final image creation.
-	  The image will built in arch/arm64/boot/IMAGE-NAME-dtb
+        prompt "Appended DTB Kernel Image name"
+        depends on BUILD_ARM64_APPENDED_DTB_IMAGE
+        help
+          Enabling this option will cause a specific kernel image Image or
+          Image.gz to be used for final image creation.
+          The image will built in arch/arm64/boot/IMAGE-NAME-dtb
 
-	config IMG_GZ_DTB
-		bool "Image.gz-dtb"
-	config IMG_DTB
-		bool "Image-dtb"
+        config IMG_GZ_DTB
+                bool "Image.gz-dtb"
+        config IMG_DTB
+                bool "Image-dtb"
 endchoice
 
 config BUILD_ARM64_APPENDED_KERNEL_IMAGE_NAME
-	string
-	depends on BUILD_ARM64_APPENDED_DTB_IMAGE
-	default "Image.gz-dtb" if IMG_GZ_DTB
-	default "Image-dtb" if IMG_DTB
+        string
+        depends on BUILD_ARM64_APPENDED_DTB_IMAGE
+        default "Image.gz-dtb" if IMG_GZ_DTB
+        default "Image-dtb" if IMG_DTB
 
 config BUILD_ARM64_APPENDED_DTB_IMAGE_NAMES
-	string "Default dtb names"
-	depends on BUILD_ARM64_APPENDED_DTB_IMAGE
-	help
-	  Space separated list of names of dtbs to append when
-	  building a concatenated Image.gz-dtb.
+        string "Default dtb names"
+        depends on BUILD_ARM64_APPENDED_DTB_IMAGE
+        help
+          Space separated list of names of dtbs to append when
+          building a concatenated Image.gz-dtb.
+
+config BUILD_ARM64_DTB_OVERLAY_IMAGE_NAMES
+        string "Default dtb overlay names"
+        depends on BUILD_ARM64_DTB_OVERLAY_IMAGE
+        help
+          Space separated list of names of dtbs to append when
+          building a concatenated overlay image
 
 endmenu
 
@@ -1264,36 +1280,6 @@ config COMPAT
 	  with page size aligned segments.
 
 	  If you want to execute 32-bit userspace applications, say Y.
-
-config KUSER_HELPERS
-	bool "Enable the kuser helpers page in 32-bit processes"
-	depends on COMPAT
-	default y
-	help
-	  Warning: disabling this option may break 32-bit applications.
-
-	  Provide kuser helpers in a special purpose fixed-address page. The
-	  kernel provides helper code to userspace in read-only form at a fixed
-	  location to allow userspace to be independent of the CPU type fitted
-	  to the system. This permits 32-bit binaries to be run on ARMv6 through
-	  to ARMv8 without modification.
-
-	  See Documentation/arm/kernel_user_helpers.txt for details.
-
-	  However, the fixed-address nature of these helpers can be used by ROP
-	  (return-orientated programming) authors when creating exploits.
-
-	  If all of the 32-bit binaries and libraries that run on your platform
-	  are built specifically for your platform, and make no use of these
-	  helpers, then you can turn this option off to hinder such exploits.
-	  However, in that case, if a binary or library relying on those helpers
-	  is run, it will receive a SIGSEGV signal, which will terminate the
-	  program. Typically, binaries compiled for ARMv7 or later do not use
-	  the kuser helpers.
-
-	  Say N here only if you are absolutely certain that you do not need
-	  these helpers; otherwise, the safe option is to say Y (the default
-	  for now)
 
 config SYSVIPC_COMPAT
 	def_bool y
