@@ -401,12 +401,6 @@ config SPARC_US2E_CPUFREQ
 	  If in doubt, say N.
 endif
 
-config CPU_FREQ_GOV_SMARTASS2
-	tristate "'smartassV2' cpufreq governor"
-	depends on CPU_FREQ
-	help
-	  'smartassV2' - a "smart" optimized governor!
-
 config CPU_FREQ_DEFAULT_GOV_SMARTASS2
 	bool "smartass2"
 	select CPU_FREQ_GOV_SMARTASS2
@@ -414,16 +408,43 @@ config CPU_FREQ_DEFAULT_GOV_SMARTASS2
 	  Use the CPUFreq governor 'smartassV2' as default.
 
 config CPU_FREQ_GOV_SMARTASS2
-	tristate "'lulzactive' cpufreq governor"
-	depends on CPU_FREQ
-	help
-	  'lulzactive' - a "active" optimized governor!
+  	tristate "'smartassV2' cpufreq governor"
+ 	depends on CPU_FREQ
+ 	help
+    	  'smartassV2' - a "smart" governor
+    	  If in doubt, say N.
 
-config CPU_FREQ_DEFAULT_GOV_SMARTASS2
+config CPU_FREQ_DEFAULT_GOV_LULZACTIVE
 	bool "lulzactive"
 	select CPU_FREQ_GOV_lulzactive
 	help
 	  Use the CPUFreq governor 'lulzactive' as default.
+
+config CPU_FREQ_GOV_SMARTASS2
+  	tristate "'smartassV2' cpufreq governor"
+ 	depends on CPU_FREQ
+ 	help
+    	  'smartassV2' - a "smart" governor
+    	  If in doubt, say N.
+
+config CPU_FREQ_DEFAULT_GOV_SMOOVE
+	bool "smoove"
+	select CPU_FREQ_GOV_SMOOVE
+	select CPU_FREQ_GOV_PERFORMANCE
+	help
+	  Use the CPUFreq governor 'smoove' as default, using predefined
+	  frequency lookup tables and optimized scaling triggers instead of
+	  % frequency steps to get smooth up/downscaling dependant on CPU load. 
+
+config CPU_FREQ_GOV_SMOOVE
+	tristate "'smoove' cpufreq governor"
+	depends on CPU_FREQ
+	help
+	  'smoove' - based on cpufreq_conservative, using predefined
+	  frequency lookup tables and optimized scaling triggers instead of
+	  % frequency steps to get smooth up/downscaling dependant on CPU load.
+
+	  If in doubt, say N.
 
 if SUPERH
 config SH_CPU_FREQ
