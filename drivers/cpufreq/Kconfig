@@ -413,6 +413,18 @@ config CPU_FREQ_DEFAULT_GOV_SMARTASS2
 	help
 	  Use the CPUFreq governor 'smartassV2' as default.
 
+config CPU_FREQ_GOV_SMARTASS2
+	tristate "'lulzactive' cpufreq governor"
+	depends on CPU_FREQ
+	help
+	  'lulzactive' - a "active" optimized governor!
+
+config CPU_FREQ_DEFAULT_GOV_SMARTASS2
+	bool "lulzactive"
+	select CPU_FREQ_GOV_lulzactive
+	help
+	  Use the CPUFreq governor 'lulzactive' as default.
+
 if SUPERH
 config SH_CPU_FREQ
 	tristate "SuperH CPU Frequency driver"
