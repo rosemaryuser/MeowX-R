@@ -317,8 +317,8 @@ static bool platform_suspend_again(suspend_state_t state)
 }
 
 #ifdef CONFIG_PM_DEBUG
-static unsigned int pm_test_delay = 5;
-module_param(pm_test_delay, uint, 0644);
+static unsigned int pm_test_delay = 2;
+module_param(pm_test_delay, uint, 0322);
 MODULE_PARM_DESC(pm_test_delay,
 		 "Number of seconds to wait before resuming from suspend test");
 #endif
@@ -329,7 +329,7 @@ static int suspend_test(int level)
 	if (pm_test_level == level) {
 		pr_info("suspend debug: Waiting for %d second(s).\n",
 				pm_test_delay);
-		mdelay(pm_test_delay * 1000);
+		mdelay(pm_test_delay * 500);
 		return 1;
 	}
 #endif /* !CONFIG_PM_DEBUG */
